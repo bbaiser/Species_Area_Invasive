@@ -28,7 +28,7 @@ sp_list<-subset(full_sp, !duplicated(sp))%>%
 int<-sp_list%>%
      filter(Category =="I"| Category =='II')%>%
      count(.)    
-
+1
 int #122 
 
 sp_list[sp_list$Category == "NA" & sp_list$native_status == "Native", "NA"] <- "Native"
