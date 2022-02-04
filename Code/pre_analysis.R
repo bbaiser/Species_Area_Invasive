@@ -62,12 +62,16 @@ int<-sp_list%>%
      dplyr::count(.)    
 
 
-
-new_data<-sp_list %>%
+#joined native/invasive designation to long format species list of park assemblages
+cleaned_data<-sp_list %>%
           mutate(Category = ifelse(native_status == 'Native',"Native",Category))%>% #give native designation
           mutate_at(vars(Category), ~replace_na(., "Not Native"))%>%#giv non-native designation
           filter(native_status!="Possibly Native")%>%#remove the designation "Possibly Native ~20 sp
-          dplyr::select(sp, Category)%>%#select only species and category 
+          mutate(CatagoryII = ifelse(Category =="I"| Category =='II',"Invasive",Category))%>%
+          dplyr::select(sp, Category,CatagoryII)%>%#select only species and category 
           left_join( .,full_sp, by = "sp")#join to long format community data
-    
- 
+
+       
+#save out data frame
+
+write.csv(cleaned_data, "data/cleaned_data.csv")
