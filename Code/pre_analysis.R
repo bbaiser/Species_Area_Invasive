@@ -61,6 +61,7 @@ int<-sp_list%>%
      filter(Category =="I"| Category =='II')%>%
      dplyr::count(.)    
 
+  
 
 #joined native/invasive designation to long format species list of park assemblages
 cleaned_data<-sp_list %>%
@@ -76,5 +77,4 @@ cleaned_data<-sp_list %>%
 
 write.csv(cleaned_data, "data/cleaned_data.csv")
 
-v<-ddply(cleaned_data, .(park_name), mutate, count = length(unique(sp)))
-?ddply
+
