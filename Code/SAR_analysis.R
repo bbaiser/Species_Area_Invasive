@@ -32,8 +32,11 @@ non_native<-rich%>%
 
 Invasive<-rich%>%
             filter(CatagoryII=="Invasive")
+| Category =='II'
 
-stat<-as.factor(rich$CatagoryII)
+Exotic<-rich%>%
+  filter(CatagoryII=="Invasive"| CatagoryII =='Not Native')
+
 
 library(car)
 ancova_model <- aov(log(n) ~ log(size) + stat, data = rich)
@@ -41,6 +44,8 @@ Anova(ancova_model, type="III")
 library(multcomp)
 ancova_model <- aov(exam ~ technique + grade, data = data)
 postHocs <- glht(ancova_model, linfct = mcp(stat = "Tukey"))
+
+TukeyHSD(ancova_model, conf.level=.95)
 summary(postHocs)
 #linear models
 
@@ -48,7 +53,7 @@ summary(lm(log(n)~log(size), data=native))
 
 summary(lm(log(n)~log(size), data=non_native))
 summary(lm(log(n)~log(size), data=Invasive))
-
+summary(lm(log(n)~log(size), data=Exotic))
 plot(log(n)~log(size), data=Invasive)  
 
 plot(park_data$sp_num~log(park_data$size)
