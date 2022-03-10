@@ -67,4 +67,4 @@ plot(log(n)~log(size), data=Invasive)
 
 plot(park_data$sp_num~log(park_data$size))
 
-     
+write.csv(rich, "data/park_rich.csv")
