@@ -5,7 +5,7 @@ library(plyr)
 library(dplyr)
 library(car)
 library(multcomp)
-
+library(ggplot2)
 
 
 #import long fromat data from "pre_analysis.R" file
@@ -91,4 +91,18 @@ summary(lm(log(n)~log(size), data=Exotic))
 plot(log(n)~log(size), data=Exotic) 
 
 
+
+#Plot all three lines
+ggplot() +
+  geom_smooth(aes(x = log(size), y = log(n)), data = native, 
+              method = "lm", se = FALSE, color = "green") + 
+  geom_smooth(aes(x = log(size), y = log(n)), data = non_native, 
+              method = "lm", se = FALSE, color = "blue") + 
+  geom_smooth(aes(x = log(size), y = log(n)), data = Invasive, 
+              method = "lm", se = FALSE, color = "red") 
+
+
+
+ # geom_point(aes(x = year, y = slr), data = brest1, color = "red") + 
+  #geom_point(aes(x = year, y = slr), data = brest2, color = "blue")
 #write.csv(rich, "data/park_rich.csv")
