@@ -27,16 +27,16 @@ reduced_park_data<-park_data[!park_data$park_name %in% steve_data$park_name,]
 
 
 ####to separate mainland and keys data
-#mainland_park_data<-reduced_park_data%>%
+mainland_park_data<-reduced_park_data%>%
           filter(Keys=="Mainland")
 
-#mainland_long_dat<-reduced_long_dat[reduced_long_dat$park_name %in% mainland_park_data$park_name,]
+mainland_long_dat<-reduced_long_dat[reduced_long_dat$park_name %in% mainland_park_data$park_name,]
 
-#rich<-mainland_long_dat %>%
+rich<-mainland_long_dat %>%
       count(CatagoryII,park_name)%>%#get species richness for each provenance by park combo
       left_join( .,mainland_park_data, by = "park_name")%>%#join with park info (i.e., area, etc)
-      mutate_at(vars(CatagoryII), as.factor)#make category a factor
-
+      mutate_at(vars(CatagoryII), as.factor)%>%#make category a factor
+      mutate(log_area = log(size))
 
 #not removing keys data
 rich<-reduced_long_dat %>%
@@ -47,14 +47,15 @@ rich<-reduced_long_dat %>%
 
 #FOR EXOTIC RICHNESS
 rich_exotic<-reduced_long_dat %>%
-  count(CatagoryIII,park_name)%>%#get species richness for each provenance by park combo
-  left_join( .,reduced_park_data, by = "park_name")%>%#join with park info (i.e., area, etc)
-  mutate_at(vars(CatagoryIII), as.factor)%>%#make catagoryII a factor
-  mutate(log_area = log(size))
+             count(CatagoryIII,park_name)%>%#get species richness for each provenance by park combo
+             left_join( .,reduced_park_data, by = "park_name")%>%#join with park info (i.e., area, etc)
+             mutate_at(vars(CatagoryIII), as.factor)%>%#make catagoryII a factor
+             mutate(log_area = log(size))
 
 #find sites without all three  
 missing<-as.data.frame(sort(table(rich$park_name)))%>%
-       filter(Freq<3)
+        filter(Freq<3)
+missing
 
 
   
