@@ -69,7 +69,8 @@ cleaned_data<-sp_list %>%
           mutate_at(vars(Category), ~replace_na(., "Not Native"))%>%#giv non-native designation
           filter(native_status!="Possibly Native")%>%#remove the designation "Possibly Native ~20 sp
           mutate(CatagoryII = ifelse(Category =="I"| Category =='II',"Invasive",Category))%>%
-          dplyr::select(sp, Category,CatagoryII)%>%#select only species and category 
+          mutate(CatagoryIII = ifelse(Category =="I"| Category =='II'| Category =='Not Native',"Exotic",Category))%>%
+          dplyr::select(sp, Category,CatagoryII,CatagoryIII)%>%#select only species and category 
           left_join( .,full_sp, by = "sp")#join to long format community data
 
        
