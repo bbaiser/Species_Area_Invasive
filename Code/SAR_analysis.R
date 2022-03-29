@@ -28,7 +28,7 @@ reduced_park_data<-park_data[!park_data$park_name %in% steve_data$park_name,]
 
 ####to separate mainland and keys data
 mainland_park_data<-reduced_park_data%>%
-          filter(Keys=="Mainland")
+          filter(Keys=="Keys")
 
 mainland_long_dat<-reduced_long_dat[reduced_long_dat$park_name %in% mainland_park_data$park_name,]
 
@@ -58,8 +58,11 @@ missing<-as.data.frame(sort(table(rich$park_name)))%>%
 missing
 
 
-  
+exp(.14)
 
+(1.14^0.14– 1) * 100 = 3.7 
+
+(1.14^0.14 -1)*100
 #test for different z-values
 ancova_model <- aov(log(n) ~ log_area * CatagoryII, data = rich)
 
@@ -94,7 +97,8 @@ Exotic<-rich%>%
 #native
 summary(lm(log(n)~log(size), data=native))
 plot(log(n)~log(size), data=native)  
-
+s=79*600000^0.12836
+log(s)
 #non_native
 summary(lm(log(n)~log(size), data=non_native))
 plot(log(n)~log(size), data=non_native)  
