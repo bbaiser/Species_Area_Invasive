@@ -7,7 +7,7 @@ library(car)
 library(multcomp)
 library(ggplot2)
 library(rstatix)
-
+library(emmeans)
 
 #import long fromat data from "pre_analysis.R" file
 long_dat<-read.csv("Data/cleaned_data.csv")
@@ -22,7 +22,7 @@ steve_data<-read.csv("Data/park_issues..SWWcomments.csv")%>%#verification of sit
 reduced_long_dat<-long_dat[!long_dat$park_name %in% steve_data$park_name,] 
 
 
-#remove parks that have insufficient data according to steve from the long_data
+#remove parks that have insufficient data according to steve from the park_data
 reduced_park_data<-park_data[!park_data$park_name %in% steve_data$park_name,] 
 
 
@@ -40,7 +40,7 @@ rich<-mainland_long_dat %>%
 
 #not removing keys data
 rich<-reduced_long_dat %>%
-     count(CatagoryII,park_name)%>%#get species richness for each provenance by park combo
+      count(CatagoryII,park_name)%>%#get species richness for each provenance by park combo
       left_join( .,reduced_park_data, by = "park_name")%>%#join with park info (i.e., area, etc)
       mutate_at(vars(CatagoryII), as.factor)%>%#make catagoryII a factor
       mutate(log_area = log(size))
@@ -58,11 +58,7 @@ missing<-as.data.frame(sort(table(rich$park_name)))%>%
 missing
 
 
-exp(.14)
 
-(1.14^0.14– 1) * 100 = 3.7 
-
-(1.14^0.14 -1)*100
 #test for different z-values
 ancova_model <- aov(log(n) ~ log_area * CatagoryII, data = rich)
 
@@ -71,7 +67,6 @@ Anova(ancova_model, type="III")
 
 
 #pairwise posthoc
-
 z<-emtrends(ancova_model,"CatagoryII", var = "log_area")
 pairs(z)
 
@@ -99,6 +94,7 @@ summary(lm(log(n)~log(size), data=native))
 plot(log(n)~log(size), data=native)  
 s=79*600000^0.12836
 log(s)
+
 #non_native
 summary(lm(log(n)~log(size), data=non_native))
 plot(log(n)~log(size), data=non_native)  
