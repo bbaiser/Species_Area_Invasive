@@ -16,8 +16,8 @@ raw_spec<-read.csv("Data/Czech_Republic_sp_lists.csv")
 #convert to long form
 data_long <- raw_spec %>%                                  
              gather(key= "site", value="presence",10:311)%>% 
-             filter(!is.na(presence))#get rid of species-site combos that don't occur
-
+             filter(!is.na(presence))%>% #get rid of species-site combos that don't occur
+             mutate(ID =as.numeric(str_remove(site, "res_id_")))
 data_long 
 
 
