@@ -1,27 +1,40 @@
 
 rm(list=ls())
-#isa: had to install rcpp before
+
+#load packages
 library(sf)
 library(lubridate)
 library(plyr)
-library(dplyrlibrary(Ostats)
+library(dplyr)
 library(ggplot2)
-library(iNEXT)
-library(piecewiseSEM)
-library(effects)
-library(raster)
 library(tidyverse)
 
-
+#full data set on species presence
 raw_spec<-read.csv("Data/Czech_Republic_sp_lists.csv")
 
-site_by_species<-raw_spec[,c(3,10:311)]%>% 
-                 mutate_all(~replace(., is.na(.), 0))%>% 
-                  
 
-data_long <- raw_spec %>%                                   # Apply gather function
-  gather(variable, value, - species_name_2002)
+#convert to long form
+
+data_long <- raw_spec %>%                                  
+             gather(key= "site", value="presence",10:311)%>% 
+             filter(!is.na(presence))#get rid of species-site combos that don't occur
+
 data_long 
+
+
+
+#make site by species matrix (realized I don;t need to)
+#site_by_species<-raw_spec[,c(3,10:311)]%>% # remove rows that are not presence or species names
+                # mutate_all(~replace(., is.na(.), 0))%>%#replace NAs with zeros
+                 #t() %>% #transpose to site by species matrix
+                 #as.data.frame() %>% #make into data frame
+                 #setNames(raw_spec[,3]) %>% #make column names after species names from original data
+                 #slice(-1)#remove first row of data which are column names
+
+
+
+
+
 
 #read in the Full species list for all parks in long format
 full_sp<-read.csv("Data/sp_list_parks_cleaned.csv")%>%
