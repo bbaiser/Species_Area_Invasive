@@ -13,37 +13,20 @@ library(emmeans)
 long_dat<-read.csv("Data/cleaned_czech_data.csv", row=1)
 
 park_data<-read.csv("Data/Czech_Republic_Parks.csv")
+colnames(park_data)
 
-steve_data<-read.csv("Data/park_issues..SWWcomments.csv")%>%#verification of sites with data i
-            filter(Keep.=="no")%>%
-            dplyr::select(park_name)
-
-#remove parks that have insufficient data according to steve from the long_data
-reduced_long_dat<-long_dat[!long_dat$park_name %in% steve_data$park_name,] 
-
-
-#remove parks that have insufficient data according to steve from the park_data
-reduced_park_data<-park_data[!park_data$park_name %in% steve_data$park_name,] 
-
-
-####to separate mainland and keys data
-mainland_park_data<-reduced_park_data%>%
-          filter(Keys=="Keys")
-
-mainland_long_dat<-reduced_long_dat[reduced_long_dat$park_name %in% mainland_park_data$park_name,]
-
-rich<-mainland_long_dat %>%
-      count(CatagoryII,park_name)%>%#get species richness for each provenance by park combo
-      left_join( .,mainland_park_data, by = "park_name")%>%#join with park info (i.e., area, etc)
-      mutate_at(vars(CatagoryII), as.factor)%>%#make category a factor
-      mutate(log_area = log(size))
+rich<-long_dat %>%
+      count(Invasion.status.2012,ID)%>%#get species richness for each provenance by park combo
+      left_join( .,park_data, by = "ID")%>%#join with park info (i.e., area, etc)
+      mutate_at(vars(Invasion.status.2012), as.factor)%>%#make category a factor
+      mutate(log_area = log(Area..ha.))
 
 #not removing keys data
 rich<-reduced_long_dat %>%
       count(CatagoryII,park_name)%>%#get species richness for each provenance by park combo
       left_join( .,reduced_park_data, by = "park_name")%>%#join with park info (i.e., area, etc)
       mutate_at(vars(CatagoryII), as.factor)%>%#make catagoryII a factor
-      mutate(log_area = log(size))
+      mutate(log_area = log(Area..ha.))
 
 #FOR EXOTIC RICHNESS
 rich_exotic<-reduced_long_dat %>%
