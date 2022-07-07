@@ -16,41 +16,36 @@ park_data<-read.csv("Data/Czech_Republic_Parks.csv")
 colnames(park_data)
 
 rich<-long_dat %>%
-      count(Invasion.status.2012,ID)%>%#get species richness for each provenance by park combo
+      count(Invasion.statusII,ID)%>%#get species richness for each provenance by park combo
       left_join( .,park_data, by = "ID")%>%#join with park info (i.e., area, etc)
-      mutate_at(vars(Invasion.status.2012), as.factor)%>%#make category a factor
+      mutate_at(vars(Invasion.statusII), as.factor)%>%#make category a factor
       mutate(log_area = log(Area..ha.))
 
-#not removing keys data
-rich<-reduced_long_dat %>%
-      count(CatagoryII,park_name)%>%#get species richness for each provenance by park combo
-      left_join( .,reduced_park_data, by = "park_name")%>%#join with park info (i.e., area, etc)
-      mutate_at(vars(CatagoryII), as.factor)%>%#make catagoryII a factor
-      mutate(log_area = log(Area..ha.))
 
+#####################
 #FOR EXOTIC RICHNESS
 rich_exotic<-reduced_long_dat %>%
              count(CatagoryIII,park_name)%>%#get species richness for each provenance by park combo
              left_join( .,reduced_park_data, by = "park_name")%>%#join with park info (i.e., area, etc)
              mutate_at(vars(CatagoryIII), as.factor)%>%#make catagoryII a factor
              mutate(log_area = log(size))
-
+######################################
 #find sites without all three  
-missing<-as.data.frame(sort(table(rich$park_name)))%>%
+missing<-as.data.frame(sort(table(rich$ID)))%>%
         filter(Freq<3)
 missing
 
 
 
 #test for different z-values
-ancova_model <- aov(log(n) ~ log_area * CatagoryII, data = rich)
+ancova_model <- aov(log(n) ~ log_area * Invasion.statusII, data = rich)
 
 Anova(ancova_model, type="III")
 
 
 
 #pairwise posthoc
-z<-emtrends(ancova_model,"CatagoryII", var = "log_area")
+z<-emtrends(ancova_model,"Invasion.statusII", var = "log_area")
 pairs(z)
 
 
@@ -58,23 +53,24 @@ pairs(z)
 
 #subset each type of species for models and plots
 native<-rich%>%
-  filter(CatagoryII=="Native")
+  filter(Invasion.statusII=="native")
 
 non_native<-rich%>%
-  filter(CatagoryII=="Not Native")
+  filter(Invasion.statusII=="Exotic")
 
 Invasive<-rich%>%
-  filter(CatagoryII=="Invasive")
+  filter(Invasion.statusII=="invasive")
 
 Exotic<-rich%>%
-  filter(CatagoryII=="Not Native"| CatagoryII =='Invasive')
+  filter(Invasion.statusII=="Exotic")
 
 
 #linear models and plots
 
 #native
-summary(lm(log(n)~log(size), data=native))
-plot(log(n)~log(size), data=native)  
+summary(lm(log(n)~log_area, data=native))
+plot(log(n)~log_area, data=native)  
+
 s=79*600000^0.12836
 log(s)
 
@@ -83,12 +79,12 @@ summary(lm(log(n)~log(size), data=non_native))
 plot(log(n)~log(size), data=non_native)  
 
 #invasive
-summary(lm(log(n)~log(size), data=Invasive))
-plot(log(n)~log(size), data=Invasive) 
+summary(lm(log(n)~log_area, data=Invasive))
+plot(log(n)~log_area, data=Invasive) 
 
 #exotic
-summary(lm(log(n)~log(size), data=Exotic))
-plot(log(n)~log(size), data=Exotic) 
+summary(lm(log(n)~log_area, data=Exotic))
+plot(log(n)~log_area, data=Exotic) 
 
 
 
