@@ -18,8 +18,9 @@ data_long <- raw_spec %>%
              gather(key= "site", value="presence",10:311)%>% 
              filter(!is.na(presence))%>% #get rid of species-site combos that don't occur
              mutate(ID =as.numeric(str_remove(site, "res_id_")))%>% #remove "res_id_" before site id to match park data
-             mutate(Invasion.status.2012 = ifelse(Origin.residence.time.2012 =="native","native",Invasion.status.2012))%>%#lable native as native in invasion status 
-             filter(!Origin.residence.time.2012 =="")#remov species with no invasion stats or origin status
+             mutate(Invasion.status.2012 = ifelse(Origin.residence.time.2012 =="native","native",Invasion.status.2012))%>%# label native as native in invasion status 
+             filter(!Origin.residence.time.2012 =="")%>%#remove species with no invasion status or origin status
+             mutate(Invasion.statusII = ifelse(Invasion.status.2012 =="casual"|Invasion.status.2012 =="naturalized","Exotic",Invasion.status.2012))
 
 data_long 
 
