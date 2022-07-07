@@ -17,9 +17,9 @@ raw_spec<-read.csv("Data/Czech_Republic_sp_lists.csv")
 data_long <- raw_spec %>%                                  
              gather(key= "site", value="presence",10:311)%>% 
              filter(!is.na(presence))%>% #get rid of species-site combos that don't occur
-             mutate(ID =as.numeric(str_remove(site, "res_id_")))%>% 
-             mutate(Invasion.status.2012 = sub("", "native", Invasion.status.2012))
-
+             mutate(ID =as.numeric(str_remove(site, "res_id_")))%>% #remove "res_id_" before site id to match park data
+             mutate(Invasion.status.2012 = ifelse(Origin.residence.time.2012 =="native","native",Invasion.status.2012))%>%#lable native as native in invasion status 
+             filter(!Origin.residence.time.2012 =="")#remov species with no invasion stats or origin status
 
 data_long 
 
@@ -44,13 +44,13 @@ length(unique(int$species_name_2002))
 
 #How many naturalized species are in the data set? (221 species)
 nat<-data_long%>%
-  filter(Invasion.status.2012 =="naturalized")
+     filter(Invasion.status.2012 =="naturalized")
 
 length(unique(nat$species_name_2002))  
 
 #How many "casual" species are in the data set? (78 species)
 cas<-data_long%>%
-  filter(Invasion.status.2012 =="casual")
+     filter(Invasion.status.2012 =="casual")
 
 length(unique(cas$species_name_2002))  
 
