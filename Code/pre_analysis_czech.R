@@ -20,10 +20,8 @@ data_long <- raw_spec %>%
              mutate(ID =as.numeric(str_remove(site, "res_id_")))%>% #remove "res_id_" before site id to match park data
              mutate(Invasion.status.2012 = ifelse(Origin.residence.time.2012 =="native","native",Invasion.status.2012))%>%# label native as native in invasion status 
              filter(!Origin.residence.time.2012 =="")%>%#remove species with no invasion status or origin status
-             mutate(Invasion.statusII = ifelse(Invasion.status.2012 =="casual"|Invasion.status.2012 =="naturalized","Exotic",Invasion.status.2012))
-
-data_long 
-
+             mutate(Invasion.statusII = ifelse(Invasion.status.2012 =="casual"|Invasion.status.2012 =="naturalized","Exotic",Invasion.status.2012))%>%#add new column showing native, exotic, invasive
+             mutate( Invasion.stausIII = paste(Invasion.statusII, Origin.residence.time.2012)) #new column showing invasions status joined with origin (e.g., invasive archaeophyte)
 
 
 #make site by species matrix (realized I don;t need to)
