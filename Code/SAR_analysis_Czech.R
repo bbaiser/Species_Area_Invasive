@@ -87,13 +87,18 @@ plot(log(n)~log_area, data=native2)
 summary(lm(log(n)~log_area, data=non_native_arc))
 plot(log(n)~log_area, data=non_native_arc)  
 
-#invasive
+#invasive_arc
 summary(lm(log(n)~log_area, data=Invasive_arc))
 plot(log(n)~log_area, data=Invasive_arc) 
 
-#exotic
-summary(lm(log(n)~log_area, data=Exotic))
-plot(log(n)~log_area, data=Exotic) 
+#non_native_neo
+summary(lm(log(n)~log_area, data=non_native_neo))
+plot(log(n)~log_area, data=non_native_neo)  
+
+#invasive_neo
+summary(lm(log(n)~log_area, data=Invasive_neo))
+plot(log(n)~log_area, data=Invasive_neo) 
+
 
 #subset each type of species for models and plots from rich (i.e., not considering origin)
 native<-rich%>%
