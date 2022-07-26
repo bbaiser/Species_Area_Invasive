@@ -8,6 +8,9 @@ library(multcomp)
 library(ggplot2)
 library(rstatix)
 library(emmeans)
+library(lme4)
+install.packages("lmerTest")
+library(lmerTest)
 
 #import long format data from "pre_analysis.R" file
 long_dat<-read.csv("Data/cleaned_czech_data.csv", row=1)
@@ -52,10 +55,16 @@ ancova_model <- aov(log(n) ~ log_area * Invasion.statusIII, data = rich_org)
 
 Anova(ancova_model, type="III")
 
-
-
 #pairwise posthoc
 z<-emtrends(ancova_model,"Invasion.statusIII", var = "log_area")
+pairs(z)
+
+###with random effect for site
+mod<-lmerTest::lmer(log(n) ~ log_area * Invasion.statusIII+(1|ID), data = rich_org)
+summary(mod)
+
+#pairwise posthoc
+z<-emtrends(mod,"Invasion.statusIII", var = "log_area")
 pairs(z)
 
 
