@@ -70,8 +70,14 @@ Anova(ancova_model, type="III")
 z<-emtrends(ancova_model,"CatagoryII", var = "log_area")
 pairs(z)
 
+###with random effect for site
+mod<-lmerTest::lmer(log(n) ~ log_area * CatagoryIII+(1|park_name), data = rich_exotic)
+summary(mod)
+Anova(mod)
 
-
+#pairwise posthoc
+z<-emtrends(mod,"CatagoryIII", var = "log_area")
+pairs(z)
 
 #subset each type of species for models and plots
 native<-rich%>%
@@ -118,7 +124,7 @@ ggplot() +
   geom_smooth(aes(x = log(size), y = log(n)), data = Invasive, 
               method = "lm", se = FALSE, color = "purple") 
 
-
+0.05868 +0.02575
 
  # geom_point(aes(x = year, y = slr), data = brest1, color = "red") + 
   #geom_point(aes(x = year, y = slr), data = brest2, color = "blue")
