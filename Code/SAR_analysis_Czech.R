@@ -24,7 +24,7 @@ rich<-long_dat %>%
       count(Invasion.statusII,ID)%>%#get species richness for each provenance by park combo
       left_join( .,park_data, by = "ID")%>%#join with park info (i.e., area, etc)
       mutate_at(vars(Invasion.statusII), as.factor)%>%#make category a factor
-      mutate(log_area = log(Area..ha.))
+      mutate(log_area = log(Area..ha.))#log transform area
 
 #get species richness for native, exotic, invasive including age (i.e., archeophyte, neophyte)
 
@@ -32,7 +32,7 @@ rich_age<-long_dat %>%
       count(Invasion.statusIII,ID)%>%#get species richness for each provenance by park combo
       left_join( .,park_data, by = "ID")%>%#join with park info (i.e., area, etc)
       mutate_at(vars(Invasion.statusIII), as.factor)%>%#make category a factor
-      mutate(log_area = log(Area..ha.))
+      mutate(log_area = log(Area..ha.))#log transform area
 
 ###
 #FOR EXOTIC RICHNESS (combine invasive and non-native)
@@ -72,7 +72,7 @@ native<-dat%>%
         filter(Invasion.statusII=="native")
 
 non_native<-dat%>%
-            filter(Invasion.statusII=="Exotic")
+            filter(Invasion.statusII=="non-native")
 
 Invasive<-dat%>%
           filter(Invasion.statusII=="invasive")
@@ -116,7 +116,20 @@ ggplot() +
 #####################################################################
 
 ###data inputs for all analyses below
-dat<-rich_age#considering age
+
+#subset data for neophytes
+
+dat<-rich_age%>%
+     filter(Invasion.statusIII=='non-native neophyte'| Invasion.statusIII=='invasive neophyte'|Invasion.statusIII=='native native')
+  
+      
+#subset data for archeophytes
+
+dat<-rich_age%>%
+     filter(Invasion.statusIII=='non-native archaeophyte'| Invasion.statusIII=='invasive archaeophyte'|Invasion.statusIII=='native native')
+
+
+
 
 #test for different z-values
 ancova_model <- aov(log(n) ~ log_area * Invasion.statusIII, data = dat)
@@ -141,13 +154,13 @@ native2<-dat%>%
          filter(Invasion.statusIII=="native native")
 
 non_native_arc<-dat%>%
-                filter(Invasion.statusIII=="Exotic archaeophyte")
+                filter(Invasion.statusIII=="non-native archaeophyte")
 
 Invasive_arc<-dat%>%
               filter(Invasion.statusIII=="invasive archaeophyte")
 
 non_native_neo<-dat%>%
-                filter(Invasion.statusIII=="Exotic neophyte")
+                filter(Invasion.statusIII=="non-native neophyte")
 
 Invasive_neo<-dat%>%
               filter(Invasion.statusIII=="invasive neophyte")
@@ -176,18 +189,15 @@ abline(lm(log(n)~log_area, data=non_native_neo))
 #invasive_neo
 summary(lm(log(n)~log_area, data=Invasive_neo))
 plot(log(n)~log_area, data=Invasive_neo) 
-abline(lm(log(n)~log_area, data=Invasive_neo)
+abline(lm(log(n)~log_area, data=Invasive_neo))
 
 
 #Plot all three lines ggplot
 #arc
-ggplot() +
-  geom_smooth(aes(x = log_area, y = log(n)), data = native2, 
-              method = "lm", se = FALSE, color = "green") + 
-  geom_smooth(aes(x = log_area, y = log(n)), data = non_native_arc, 
-              method = "lm", se = FALSE, color = "blue") + 
-  geom_smooth(aes(x = log_area, y = log(n)), data = Invasive_arc, 
-              method = "lm", se = FALSE, color = "purple") 
+
+
+6.925e-02 +6.648e-03 
+
 #neo
 ggplot() +
   geom_smooth(aes(x = log_area, y = log(n)), data = native2, 
@@ -196,5 +206,12 @@ ggplot() +
               method = "lm", se = FALSE, color = "blue") + 
   geom_smooth(aes(x = log_area, y = log(n)), data = Invasive_neo, 
               method = "lm", se = FALSE, color = "purple") 
-
+#arc
+ggplot() +
+  geom_smooth(aes(x = log_area, y = log(n)), data = native2, 
+              method = "lm", se = FALSE, color = "green") + 
+  geom_smooth(aes(x = log_area, y = log(n)), data = non_native_arc, 
+              method = "lm", se = FALSE, color = "blue") + 
+  geom_smooth(aes(x = log_area, y = log(n)), data = Invasive_arc, 
+              method = "lm", se = FALSE, color = "purple") 
 
