@@ -24,10 +24,10 @@ rich<-long_dat %>%
       count(Invasion.statusII,ID)%>%#get species richness for each provenance by park combo
       left_join( .,park_data, by = "ID")%>%#join with park info (i.e., area, etc)
       mutate_at(vars(Invasion.statusII), as.factor)%>%#make category a factor
-      mutate(log_area = log(Area..ha.))#log transform area
+      mutate(log_area = log(Area..ha./247.1))#log transform area
 
 #get species richness for native, exotic, invasive including age (i.e., archeophyte, neophyte)
-
+1/247
 rich_age<-long_dat %>%
       count(Invasion.statusIII,ID)%>%#get species richness for each provenance by park combo
       left_join( .,park_data, by = "ID")%>%#join with park info (i.e., area, etc)
