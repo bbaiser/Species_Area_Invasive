@@ -53,7 +53,11 @@ cas<-data_long%>%
 
 length(unique(cas$species_name_2002))  
 
+#How many "native" species are in the data set? (1707 species)
+nat<-data_long%>%
+  filter(Invasion.status.2012 =="native")
 
+length(unique(nat$species_name_2002))  
 
 write.csv(data_long, "data/cleaned_czech_data.csv")
 
