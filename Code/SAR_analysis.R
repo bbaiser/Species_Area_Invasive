@@ -36,14 +36,14 @@ rich<-mainland_long_dat %>%
       count(CatagoryII,park_name)%>%#get species richness for each provenance by park combo
       left_join( .,mainland_park_data, by = "park_name")%>%#join with park info (i.e., area, etc)
       mutate_at(vars(CatagoryII), as.factor)%>%#make category a factor
-      mutate(log_area = log(size))
+      mutate(log_area = log(size/247.1))
 
 #not removing keys data
 rich<-reduced_long_dat %>%
       count(CatagoryII,park_name)%>%#get species richness for each provenance by park combo
       left_join( .,reduced_park_data, by = "park_name")%>%#join with park info (i.e., area, etc)
       mutate_at(vars(CatagoryII), as.factor)%>%#make catagoryII a factor
-      mutate(log_area = log(size))
+      mutate(log_area = log(size/247.1))
 
 #FOR EXOTIC RICHNESS
 rich_exotic<-reduced_long_dat %>%
