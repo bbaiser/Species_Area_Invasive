@@ -71,12 +71,12 @@ z<-emtrends(ancova_model,"CatagoryII", var = "log_area")
 pairs(z)
 
 ###with random effect for site
-mod<-lmerTest::lmer(log(n) ~ log_area * CatagoryIII+(1|park_name), data = rich_exotic)
+mod<-lmerTest::lmer(log(n) ~ log_area * CatagoryII+(1|park_name), data = rich)
 summary(mod)
 Anova(mod)
 
 #pairwise posthoc
-z<-emtrends(mod,"CatagoryIII", var = "log_area")
+z<-emtrends(mod,"CatagoryII", var = "log_area")
 pairs(z)
 
 #subset each type of species for models and plots
