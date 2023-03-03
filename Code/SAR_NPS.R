@@ -73,18 +73,18 @@ Invasive<-rich%>%
 #linear models and plots
 
 #native
-summary(lm(log(n)~log(area_km2), data=native))
+summary(reg<-lm(log(n)~log(area_km2), data=native))
 plot(log(n)~log(area_km2), data=native)  
-
+abline(reg)
 
 #non_native
-summary(lm(log(n)~log(area_km2), data=non_native))
+summary(reg<-lm(log(n)~log(area_km2), data=non_native))
 plot(log(n)~log(area_km2), data=non_native)  
-
+abline(reg)
 #invasive
-summary(lm(log(n)~log(area_km2), data=Invasive))
+summary(reg<-lm(log(n)~log(area_km2), data=Invasive))
 plot(log(n)~log(area_km2), data=Invasive) 
-
+abline(reg)
 #exotic
 
 

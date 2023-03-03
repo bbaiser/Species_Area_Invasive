@@ -32,7 +32,7 @@ rich_age<-long_dat %>%
       count(Invasion.statusIII,ID)%>%#get species richness for each provenance by park combo
       left_join( .,park_data, by = "ID")%>%#join with park info (i.e., area, etc)
       mutate_at(vars(Invasion.statusIII), as.factor)%>%#make category a factor
-      mutate(log_area = log(Area..ha.))#log transform area
+      mutate(log_area = log(Area..ha./100))#log transform area
 
 ###
 #FOR EXOTIC RICHNESS (combine invasive and non-native)
@@ -164,7 +164,7 @@ non_native_neo<-dat%>%
 
 Invasive_neo<-dat%>%
               filter(Invasion.statusIII=="invasive neophyte")
-
+6.925e-02 +6.648e-03 
 #linear models and plots
 #native
 summary(lm(log(n)~log_area, data=native2))
@@ -196,7 +196,7 @@ abline(lm(log(n)~log_area, data=Invasive_neo))
 #arc
 
 
-6.925e-02 +6.648e-03 
+0.09390 +0.06655
 
 #neo
 ggplot() +
