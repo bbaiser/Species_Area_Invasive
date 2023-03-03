@@ -8,6 +8,13 @@ nps_data<-load("Data/nps_plant_invasive.RData")
 species_data<-nps_plants_present2%>%
               rename(Park=park_abbr)
 
+data %>%                    # take the data.frame "data"
+  filter(!is.na(aa)) %>%    # Using "data", filter out all rows with NAs in aa 
+  group_by(bb) %>%          # Then, with the filtered data, group it by "bb"
+  summarise(Unique_Elements = n_distinct(aa))   # Now summarise with unique elements per group
+
+
+
 #park info
 park_data<-park_info%>%
            rename(Park=UNIT_CODE)
@@ -19,7 +26,9 @@ rich<-species_data %>%
      # mutate_at(vars(status), as.factor)%>%#make category a factor
       mutate(log_area = log(area_km2))
 
-
+rich %>%
+  group_by(status) %>%
+  summarize(Mean = mean(n, na.rm=TRUE))
 
 #find sites without all three  
 missing<-as.data.frame(sort(table(rich$Park)))%>%
