@@ -9,7 +9,7 @@ library(ggplot2)
 library(rstatix)
 library(emmeans)
 
-#import long format data from "pre_analysis.R" file
+####call in and clean data####
 
 #species data
 long_dat<-read.csv("Data/cleaned_data.csv")
