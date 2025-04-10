@@ -11,15 +11,16 @@ library(emmeans)
 library(lme4)
 library(lmerTest)
 
-####call in and clean data####
-#import long format data from "pre_analysis.R" file
+####import and clean data####
+
+#species data
 long_dat<-read.csv("Data/cleaned_czech_data.csv", row=1)
 
-#import park data
+#park data
 park_data<-read.csv("Data/Czech_Republic_Parks.csv")
 
 
-#get species richness for native, exotic, invasive not including age (i.e., archeophyte, neophyte)
+#get species richness for native, exotic, invasive NOT including age (i.e., archeophyte, neophyte)
 rich<-long_dat %>%
       count(Invasion.statusII,ID)%>%#get species richness for each provenance by park combo
       left_join( .,park_data, by = "ID")%>%#join with park info (i.e., area, etc)
@@ -27,12 +28,11 @@ rich<-long_dat %>%
       mutate(log_area = log(Area..ha./100))#log transform area
 
 #get species richness for native, exotic, invasive including age (i.e., archeophyte, neophyte)
-
 rich_age<-long_dat %>%
       count(Invasion.statusIII,ID)%>%#get species richness for each provenance by park combo
       left_join( .,park_data, by = "ID")%>%#join with park info (i.e., area, etc)
       mutate_at(vars(Invasion.statusIII), as.factor)%>%#make category a factor
-      mutate(log_area = log(Area..ha./100))#log transform area
+      mutate(log_area = log(Area..ha./100))#log transform area and convert to km2
 
 ###
 #FOR EXOTIC RICHNESS (combine invasive and non-native)
@@ -44,7 +44,7 @@ rich_age<-long_dat %>%
 ###
 
 
-####analysis not considering age####
+####analysis not considering age ####
 
 dat<-rich# not considering age
 
@@ -105,7 +105,7 @@ s=79*600000^0.12836
 log(s)
 
 #Plot all three lines ggplot
-ggplot() +
+ggplot() +labs(y = "log (Species Richness)", x = expression(log(Area)~km^2)) +
   geom_smooth(aes(x = log_area, y = log(n)), data = native, 
               method = "lm", se = FALSE, color = "green") + 
   geom_smooth(aes(x = log_area, y = log(n)), data = non_native, 
